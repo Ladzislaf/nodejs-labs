@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<h4>name: <span id="result"></span></h4>
+	<button onclick="getName()" id="button">Get name</button>
+	<script>
+		const getName = () => {
+			let xhr = new XMLHttpRequest()
+			// true - async
+			xhr.open('GET', 'http://localhost:5000/api/name', true)
+			xhr.send()
+			xhr.onload = () => {
+				if (xhr.status !== 200) {
+					console.log('error: ' + xhr.status)
+				} else {
+					result.innerHTML = xhr.responseText
+					console.log(xhr.responseText)
+				}
+			}
+		};
+	</script>
+</body>
+</html>
