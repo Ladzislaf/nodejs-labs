@@ -8,6 +8,13 @@ const fact = (k) => {
 	return (k > 0) ? k * fact(k - 1) : 1
 }
 
+function Fact(k, func) {
+    this.k = k
+    this.fact = fact
+    this.func = func
+    this.calculateFact = () => {process.nextTick(() => {this.func(null, this.fact(this.k))})}
+}
+
 const server = http.createServer((req, res) => {
 	let path = url.parse(req.url).pathname
 
@@ -23,7 +30,11 @@ const server = http.createServer((req, res) => {
 					'Content-Type': 'application/json'
 				})
 
-				process.nextTick(() => res.end(JSON.stringify({k: k, fact: fact(k)})))
+				let facts = new Fact(k, (err, result) => {
+					err != null ? console.log('Error: ' + err) : res.end(JSON.stringify({ k: k, fact: result }))
+				})
+
+				facts.calculateFact()
 			}
 		} else {
 			res.writeHead(200, {
