@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<div>
+		<input type="number" placeholder="id" id="Id"> <br>
+		<input type="text" placeholder="name" id="Name"> <br>
+		<input type="date" placeholder="birthday" id="Bday"> <br>
+		<button onclick="Get()">GET</button>
+		<button onclick="Post()">POST</button>
+		<button onclick="Put()">PUT</button>
+		<button onclick="Delete()">DELETE</button>
+	</div>
+
+	<div id="result"></div>
+
+	<script>
+		const Get = () => {
+			fetch('http://localhost:5000/api/db', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				}
+			})
+			.then(res => { return res.json() })
+			.then(data => {
+				console.log('GET.data', data)
+				result.innerHTML = ''
+				data.forEach(el => {
+					result.innerHTML += `${el.id}. ${el.name} ${el.bday} <br/>`
+				})
+			})
+		}
+
+		const Post = () => {
+			console.log('POST')
+			fetch('http://localhost:5000/api/db', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({id: +Id.value, name: Name.value, bday: Bday.value})
+			})
+			.then(res => { return res.json() })
+			.then(data => { console.log('POST.data', data) })
+		}
+
+		const Put = () => {
+			fetch('http://localhost:5000/api/db', {
+				method: 'PUT',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ id: +Id.value, name: Name.value, bday: Bday.value })
+			})
+			.then(res => { return res.json() })
+			.then(data => { console.log('PUT.data', data) })
+		}
+
+		const Delete = () => {
+			if (Id.value) {
+				fetch(`http://localhost:5000/api/db?id=${Id.value}`, {
+					method: 'DELETE',
+				})
+				.then(res => { return res.json() })
+				.then(data => { console.log('DEL.data', data) })
+			}
+		};
+	</script>
+</body>
+</html>
